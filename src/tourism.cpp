@@ -75,7 +75,7 @@ int Tourism::createGraph(const string& vexPath, const string& edgePath) {
 
         if (v1 != -1 && v2 != -1) {
             graph.addEdge(v1, v2, weight);
-            cout << "成功添加边：" << v1Name << " -> " << v2Name << ", 权重：" << weight << endl;
+            cout << "成功添加边：" << v1Name << " -> " << v2Name << ", 距离：" << weight << endl;
         } else {
             if (v1 == -1) cout << "警告：未找到顶点 " << v1Name << endl;
             if (v2 == -1) cout << "警告：未找到顶点 " << v2Name << endl;
@@ -99,7 +99,7 @@ int Tourism::createGraph(const string& vexPath, const string& edgePath) {
             if (i < arc.adjvex) {
                 cout << "  " << graph.getVex(i).name << " -> "
                      << graph.getVex(arc.adjvex).name
-                     << ", 权重: " << arc.weight << endl;
+                     << ", 距离: " << arc.weight << endl;
             }
         }
     }
@@ -231,9 +231,9 @@ int Tourism::designMinPath() {
         for (const auto& edge : mstEdges) {
             cout << "  " << graph.getVex(edge.vex1).name
                  << " <-> " << graph.getVex(edge.vex2).name
-                 << "（长度：" << edge.weight << "m）" << endl;
+                 << "（距离：" << edge.weight << "m）" << endl;
         }
-        cout << endl << "总铺设长度：" << totalWeight << "m" << endl;
+        cout << endl << "总铺设距离：" << totalWeight << "m" << endl;
     }
     cout << "==================================" << endl;
     return 0;
