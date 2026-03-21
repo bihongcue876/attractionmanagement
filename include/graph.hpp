@@ -41,7 +41,7 @@ public:
     vector<ArcNode>& getAdjList(int v); // 获取邻接表
     const vector<ArcNode>& getAdjList(int v) const; // 获取邻接表(常量版本)
     int calcPathWeight(const vector<int>& path) const; // 计算路径权重
-    vector<int> DFS(int start, int end, vector<bool>& visited); // 深度优先搜索
+    void DFS(int v, vector<bool>& visited, vector<int>& path); // 深度优先搜索
     vector<int> DFSTraverse(int start); // 深度优先遍历
     vector<Edge> Prim(); // Prim最小生成树算法
     vector<int> dijkstra(int start, int end); // Dijkstra最短路径算法

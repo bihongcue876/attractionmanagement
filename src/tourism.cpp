@@ -10,7 +10,6 @@
 using namespace std;
 
 Tourism::Tourism() {} // Tourism 构造函数
-
 Tourism::~Tourism() {} // ~Tourism 析构函数
 
 static int readInt(const string& prompt) {
@@ -36,7 +35,7 @@ static string joinPath(const vector<int>& path, const Graph& g, const string& se
 int Tourism::createGraph(const string& vexPath, const string& edgePath) {
     ifstream vexFile(vexPath);
     if (!vexFile.is_open()) {
-        cout << "错误：无法打开 " << vexPath << " 文件" << endl;
+        cout << "错误：无法打开 " << vexPath << endl;
         return -1;
     }
 
@@ -46,16 +45,15 @@ int Tourism::createGraph(const string& vexPath, const string& edgePath) {
         stringstream ss(line);
         int num;
         string name, desc;
-        ss >> num >> name;
-        ss >> ws;
+        ss >> num >> name >> ws;
         getline(ss, desc);
-        graph.addVex(Vex{num, name, desc});
+        graph.addVex({num, name, desc});
     }
     vexFile.close();
 
     ifstream edgeFile(edgePath);
     if (!edgeFile.is_open()) {
-        cout << "错误：无法打开 " << edgePath << " 文件" << endl;
+        cout << "错误：无法打开 " << edgePath << endl;
         return -1;
     }
 
@@ -75,37 +73,20 @@ int Tourism::createGraph(const string& vexPath, const string& edgePath) {
 
         if (v1 != -1 && v2 != -1) {
             graph.addEdge(v1, v2, weight);
-            cout << "成功添加边：" << v1Name << " -> " << v2Name << ", 距离：" << weight << endl;
-        } else {
-            if (v1 == -1) cout << "警告：未找到顶点 " << v1Name << endl;
-            if (v2 == -1) cout << "警告：未找到顶点 " << v2Name << endl;
         }
     }
     edgeFile.close();
 
     cout << "========== 图创建成功 ==========" << endl;
     cout << "顶点数目: " << graph.getVexNum() << endl;
-    cout << "边数目: " << graph.getEdgeNum() << endl << endl;
-    cout << "顶点信息:" << endl;
+    cout << "边数目: " << graph.getEdgeNum() << endl;
     for (int i = 0; i < graph.getVexNum(); i++) {
         const auto& vex = graph.getVex(i);
-        cout << "  编号: " << vex.num << ", 名称: " << vex.name << ", 描述: " << vex.desc << endl;
-    }
-    cout << endl;
-    cout << "边信息:" << endl;
-    for (int i = 0; i < graph.getVexNum(); i++) {
-        const auto& adj = graph.getAdjList(i);
-        for (const auto& arc : adj) {
-            if (i < arc.adjvex) {
-                cout << "  " << graph.getVex(i).name << " -> "
-                     << graph.getVex(arc.adjvex).name
-                     << ", 距离: " << arc.weight << endl;
-            }
-        }
+        cout << "  [" << vex.num << "] " << vex.name << " - " << vex.desc << endl;
     }
     cout << "==============================" << endl;
     return 0;
-} // createGraph 从文件创建图
+}
 
 int Tourism::getSpotInfo() {
     int spotNum = readInt("请输入景点编号：");

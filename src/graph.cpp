@@ -65,133 +65,86 @@ int Graph::calcPathWeight(const vector<int>& path) const {
     return weight;
 } // 计算路径总权重
 
-vector<int> Graph::DFS(int start, int end, vector<bool>& visited) {
-    if (start < 0 || start >= vexs.size() || end < 0 || end >= vexs.size()) {
-        return {}; // 顶点索引无效返回空路径
-    }
-    vector<int> path;
-    visited[start] = true; // 标记起点已访问
-    path.push_back(start);
-    if (start == end) {
-        return path; // 起点等于终点直接返回
-    }
-    for (const auto& arc : adjList[start]) {
+void Graph::DFS(int v, vector<bool>& visited, vector<int>& path) {
+    visited[v] = true;
+    path.push_back(v);
+    for (const auto& arc : adjList[v]) {
         if (!visited[arc.adjvex]) {
-            vector<int> result = DFS(arc.adjvex, end, visited); // 递归搜索
-            if (!result.empty()) {
-                path.insert(path.end(), result.begin(), result.end());
-                return path; // 找到路径返回
-            }
+            DFS(arc.adjvex, visited, path);
         }
     }
-    visited[start] = false; // 回溯
-    path.pop_back();
-    return {}; // 未找到路径返回空
-} // 深度优先搜索找两点间路径
+} // 用于递归的DFS
 
 vector<int> Graph::DFSTraverse(int start) {
     if (start < 0 || start >= vexs.size()) {
-        return {}; // 起点索引无效返回空路径
+        return {};
     }
     vector<bool> visited(vexs.size(), false);
     vector<int> path;
-    vector<int> stack = {start}; // 用栈模拟递归
-    while (!stack.empty()) {
-        int v = stack.back();
-        stack.pop_back();
-        if (visited[v]) continue; // 已访问跳过
-        visited[v] = true;
-        path.push_back(v);
-        for (int i = adjList[v].size() - 1; i >= 0; i--) { // 逆序入栈保证顺序
-            int next = adjList[v][i].adjvex;
-            if (!visited[next]) {
-                stack.push_back(next);
-            }
-        }
-    }
-    for (size_t i = 0; i < visited.size(); i++) { // 处理未连通顶点
+    DFS(start, visited, path);
+    for (size_t i = 0; i < vexs.size(); i++) {
         if (!visited[i]) {
-            stack.push_back(i);
-            while (!stack.empty()) {
-                int v = stack.back();
-                stack.pop_back();
-                if (visited[v]) continue;
-                visited[v] = true;
-                path.push_back(v);
-                for (int j = adjList[v].size() - 1; j >= 0; j--) {
-                    int next = adjList[v][j].adjvex;
-                    if (!visited[next]) {
-                        stack.push_back(next);
-                    }
-                }
-            }
+            DFS(i, visited, path);
         }
     }
     return path;
-} // 深度优先遍历全图
+} // 用于管理的DFS
 
 vector<Edge> Graph::Prim() {
     int n = vexs.size();
-    if (n == 0) {
-        return {}; // 空图返回空边集
-    }
+    if (n == 0) return {};
     vector<bool> visited(n, false);
     vector<Edge> mstEdges;
-    visited[0] = true; // 从第一个顶点开始
-    for (int count = 0; count < n - 1; count++) {
-        int minWeight = INF;
-        int u = -1, v = -1;
+    visited[0] = true;
+    for (int count = 1; count < n; count++) {
+        int minW = INF, u = -1, v = -1;
         for (int i = 0; i < n; i++) {
-            if (visited[i]) { // 遍历已访问顶点的邻边
-                for (const auto& arc : adjList[i]) {
-                    if (!visited[arc.adjvex] && arc.weight < minWeight) {
-                        minWeight = arc.weight; // 更新最小权重
-                        u = i;
-                        v = arc.adjvex;
-                    }
+            if (!visited[i]) continue;
+            for (const auto& arc : adjList[i]) {
+                if (!visited[arc.adjvex] && arc.weight < minW) {
+                    minW = arc.weight;
+                    u = i;
+                    v = arc.adjvex;
                 }
             }
         }
-        if (u == -1) break; // 图不连通退出
-        mstEdges.push_back(Edge{u, v, minWeight}); // 添加最小边
-        visited[v] = true; // 标记新顶点已访问
+        if (u == -1) break;
+        mstEdges.push_back({u, v, minW});
+        visited[v] = true;
     }
     return mstEdges;
-} // Prim算法求最小生成树
+}
 
 vector<int> Graph::dijkstra(int start, int end) {
     int n = vexs.size();
-    if (start < 0 || start >= n || end < 0 || end >= n) {
-        return {}; // 顶点索引无效返回空
-    }
-    vector<int> dist(n, INF); // 距离数组初始化为无穷大
-    vector<bool> visited(n, false); // 访问标记数组
-    vector<int> prev(n, -1); // 前驱顶点数组
-    dist[start] = 0; // 起点距离为0
+    if (start < 0 || start >= n || end < 0 || end >= n) return {};
+    
+    vector<int> dist(n, INF), prev(n, -1);
+    vector<bool> visited(n, false);
+    dist[start] = 0;
+    
     for (int i = 0; i < n; i++) {
-        int u = -1;
-        int minDist = INF;
-        for (int j = 0; j < n; j++) { // 找未访问顶点中距离最小的
-            if (!visited[j] && dist[j] < minDist) {
-                minDist = dist[j];
+        int u = -1, minD = INF;
+        for (int j = 0; j < n; j++) {
+            if (!visited[j] && dist[j] < minD) {
+                minD = dist[j];
                 u = j;
             }
         }
-        if (u == -1) break; // 所有可达顶点已处理
+        if (u == -1) break;
         visited[u] = true;
-        for (const auto& arc : adjList[u]) { // 松弛操作
+        for (const auto& arc : adjList[u]) {
             if (!visited[arc.adjvex] && dist[u] + arc.weight < dist[arc.adjvex]) {
                 dist[arc.adjvex] = dist[u] + arc.weight;
-                prev[arc.adjvex] = u; // 更新前驱
+                prev[arc.adjvex] = u;
             }
         }
     }
-    if (dist[end] == INF) {
-        return {}; // 终点不可达返回空
-    }
+    
+    if (dist[end] == INF) return {};
     vector<int> path;
-    for (int current = end; current != -1; current = prev[current]) {
-        path.insert(path.begin(), current); // 头插法构建路径
+    for (int cur = end; cur != -1; cur = prev[cur]) {
+        path.insert(path.begin(), cur);
     }
     return path;
-} // Dijkstra算法求两点间最短路径
+}
