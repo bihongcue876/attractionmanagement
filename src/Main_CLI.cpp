@@ -48,7 +48,7 @@ int main(void) {
         // 使用 switch case 处理用户选择
         switch (choice) {
             case 1: { // 创建图
-                cout << "========== 创建景区图示 ==========" << endl;
+                cout << "========== 创建景区地图 ==========" << endl;
                 
                 string vexPath, edgePath;
                 cout << "请输入景点信息文件路径（直接回车使用默认路径 ./data/Vex.txt）：";
@@ -83,7 +83,7 @@ int main(void) {
             }
                 
             case 3: { // 展示图
-                cout << "========== 展示图信息 ==========" << endl;
+                cout << "========== 展示地图信息 ==========" << endl;
                 tourism.showGraph();
                 break;
             }
@@ -108,7 +108,7 @@ int main(void) {
                 
             case 0: // 退出系统
                 cout << "========== 退出系统 ==========" << endl;
-                cout << "感谢使用景区信息管理系统！" << endl;
+                cout << "即将退出系统！" << endl;
                 return 0;
                 
             default: // 无效输入
