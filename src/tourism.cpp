@@ -155,31 +155,16 @@ int Tourism::TravelPath() {
     cout << "========== 旅游路径 ==========" << endl;
     cout << "从 " << graph.getVex(start).name << " 开始游览" << endl << endl;
 
-    const auto& path = graph.DFSTraverse(start);
-    if (path.empty()) {
+    const auto& allPaths = graph.DFSTraverse(start);
+    if (allPaths.empty()) {
         cout << "未找到游览路线" << endl;
     } else {
-        cout << "推荐路线：" << endl;
-        int segDist = 0;
-        for (size_t i = 0; i < path.size(); i++) {
-            if (i == 0) {
-                cout << "  " << graph.getVex(path[i]).name;
-            } else {
-                int w = graph.getWeight(path[i-1], path[i]);
-                if (w == INF) {
-                    cout << endl << "  [需离开景区] " << graph.getVex(path[i]).name;
-                    cout << "（景区内距离：" << segDist << "m）" << endl;
-                    segDist = 0;
-                } else {
-                    segDist += w;
-                    cout << " -> " << graph.getVex(path[i]).name;
-                }
-            }
+        cout << "共有 " << allPaths.size() << " 条游览路线：" << endl << endl;
+        for (size_t i = 0; i < allPaths.size(); i++) {
+            const auto& path = allPaths[i];
+            cout << "路线" << (i + 1) << "：" << joinPath(path, graph) << endl;
+            cout << "  距离：" << graph.calcPathWeight(path) << "m" << endl;
         }
-        if (segDist > 0) {
-            cout << "（景区内距离：" << segDist << "m）" << endl;
-        }
-        cout << "总距离：" << graph.getTraverseDist() << "m" << endl;
     }
     cout << "==============================" << endl;
     return 0;

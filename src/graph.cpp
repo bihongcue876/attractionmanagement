@@ -6,7 +6,7 @@
 
 using namespace std;
 
-Graph::Graph() : edgeNum(0), traverseDist(0) {} // 构造函数
+Graph::Graph() : edgeNum(0) {} // 构造函数
 
 Graph::~Graph() {} // 析构函数
 
@@ -64,38 +64,40 @@ int Graph::calcPathWeight(const vector<int>& path) const {
         weight += w;
     }
     return weight;
-} // 计算路径总权重
+}
 
-void Graph::DFS(int v, vector<bool>& visited, vector<int>& path, int& ttlDist) {
+void Graph::DFSAll(int v, vector<bool>& visited, vector<int>& path) {
     visited[v] = true;
     path.push_back(v);
-    vector<ArcNode> sortedAdj = adjList[v];
-    sort(sortedAdj.begin(), sortedAdj.end(), [](const ArcNode& a, const ArcNode& b) {
-        return a.weight < b.weight;
-    });
-    for (const auto& arc : sortedAdj) {
-        if (!visited[arc.adjvex]) {
-            ttlDist += arc.weight;
-            DFS(arc.adjvex, visited, path, ttlDist);
+    
+    if (path.size() == vexs.size()) {
+        allPaths.push_back(path);
+    } else {
+        vector<ArcNode> sortedAdj = adjList[v];
+        sort(sortedAdj.begin(), sortedAdj.end(), [](const ArcNode& a, const ArcNode& b) {
+            return a.weight < b.weight;
+        });
+        for (const auto& arc : sortedAdj) {
+            if (!visited[arc.adjvex]) {
+                DFSAll(arc.adjvex, visited, path);
+            }
         }
     }
-} // 用于递归的DFS
+    
+    visited[v] = false;
+    path.pop_back();
+} // DFS递归找所有路径
 
-vector<int> Graph::DFSTraverse(int start) {
+vector<vector<int>> Graph::DFSTraverse(int start) {
     if (start < 0 || start >= vexs.size()) {
         return {};
     }
+    allPaths.clear();
     vector<bool> visited(vexs.size(), false);
     vector<int> path;
-    traverseDist = 0;
-    DFS(start, visited, path, traverseDist);
-    for (size_t i = 0; i < vexs.size(); i++) {
-        if (!visited[i]) {
-            DFS(i, visited, path, traverseDist);
-        }
-    }
-    return path;
-} // 用于管理的DFS
+    DFSAll(start, visited, path);
+    return allPaths;
+}
 
 vector<Edge> Graph::Prim() {
     int n = vexs.size();
