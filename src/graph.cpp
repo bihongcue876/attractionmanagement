@@ -1,11 +1,12 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 #include "graph.hpp"
 
 using namespace std;
 
-Graph::Graph() : edgeNum(0) {} // 构造函数
+Graph::Graph() : edgeNum(0), traverseDist(0) {} // 构造函数
 
 Graph::~Graph() {} // 析构函数
 
@@ -65,12 +66,17 @@ int Graph::calcPathWeight(const vector<int>& path) const {
     return weight;
 } // 计算路径总权重
 
-void Graph::DFS(int v, vector<bool>& visited, vector<int>& path) {
+void Graph::DFS(int v, vector<bool>& visited, vector<int>& path, int& ttlDist) {
     visited[v] = true;
     path.push_back(v);
-    for (const auto& arc : adjList[v]) {
+    vector<ArcNode> sortedAdj = adjList[v];
+    sort(sortedAdj.begin(), sortedAdj.end(), [](const ArcNode& a, const ArcNode& b) {
+        return a.weight < b.weight;
+    });
+    for (const auto& arc : sortedAdj) {
         if (!visited[arc.adjvex]) {
-            DFS(arc.adjvex, visited, path);
+            ttlDist += arc.weight;
+            DFS(arc.adjvex, visited, path, ttlDist);
         }
     }
 } // 用于递归的DFS
@@ -81,10 +87,11 @@ vector<int> Graph::DFSTraverse(int start) {
     }
     vector<bool> visited(vexs.size(), false);
     vector<int> path;
-    DFS(start, visited, path);
+    traverseDist = 0;
+    DFS(start, visited, path, traverseDist);
     for (size_t i = 0; i < vexs.size(); i++) {
         if (!visited[i]) {
-            DFS(i, visited, path);
+            DFS(i, visited, path, traverseDist);
         }
     }
     return path;

@@ -156,11 +156,30 @@ int Tourism::TravelPath() {
     cout << "从 " << graph.getVex(start).name << " 开始游览" << endl << endl;
 
     const auto& path = graph.DFSTraverse(start);
-    if (!path.empty()) {
-        cout << "推荐路线：" << endl << "  " << joinPath(path, graph) << endl;
-        cout << "总距离：" << graph.calcPathWeight(path) << "m" << endl;
-    } else {
+    if (path.empty()) {
         cout << "未找到游览路线" << endl;
+    } else {
+        cout << "推荐路线：" << endl;
+        int segDist = 0;
+        for (size_t i = 0; i < path.size(); i++) {
+            if (i == 0) {
+                cout << "  " << graph.getVex(path[i]).name;
+            } else {
+                int w = graph.getWeight(path[i-1], path[i]);
+                if (w == INF) {
+                    cout << endl << "  [需离开景区] " << graph.getVex(path[i]).name;
+                    cout << "（景区内距离：" << segDist << "m）" << endl;
+                    segDist = 0;
+                } else {
+                    segDist += w;
+                    cout << " -> " << graph.getVex(path[i]).name;
+                }
+            }
+        }
+        if (segDist > 0) {
+            cout << "（景区内距离：" << segDist << "m）" << endl;
+        }
+        cout << "总距离：" << graph.getTraverseDist() << "m" << endl;
     }
     cout << "==============================" << endl;
     return 0;
@@ -181,7 +200,8 @@ int Tourism::findShortPath() {
     cout << "从 " << graph.getVex(start).name << " 到 " << graph.getVex(end).name << endl << endl;
 
     if (path.empty()) {
-        cout << "错误：无法到达目标景点" << endl;
+        cout << "提示：两景点不连通，无法直接到达" << endl;
+        cout << "需离开景区后重新进入" << endl;
     } else {
         cout << "最短路线：" << endl << "  " << joinPath(path, graph) << endl;
         cout << "最短距离：" << graph.calcPathWeight(path) << "m" << endl;

@@ -108,7 +108,7 @@ int main(void) {
                 
             case 0: // 退出系统
                 cout << "========== 退出系统 ==========" << endl;
-                cout << "即将退出系统！" << endl;
+                cout << "即将退出系统" << endl;
                 return 0;
                 
             default: // 无效输入
