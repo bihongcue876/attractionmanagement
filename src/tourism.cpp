@@ -78,8 +78,8 @@ int Tourism::createGraph(const string& vexPath, const string& edgePath) {
     edgeFile.close();
 
     cout << "========== 图创建成功 ==========" << endl;
-    cout << "顶点数目: " << graph.getVexNum() << endl;
-    cout << "边数目: " << graph.getEdgeNum() << endl;
+    cout << "景点数目: " << graph.getVexNum() << endl;
+    cout << "路径数目: " << graph.getEdgeNum() << endl;
     for (int i = 0; i < graph.getVexNum(); i++) {
         const auto& vex = graph.getVex(i);
         cout << "  [" << vex.num << "] " << vex.name << " - " << vex.desc << endl;
@@ -122,9 +122,9 @@ int Tourism::showGraph() {
     }
 
     cout << "========== 图信息 ==========" << endl;
-    cout << "顶点数目：" << graph.getVexNum() << endl;
-    cout << "边数目：" << graph.getEdgeNum() << endl << endl;
-    cout << "顶点列表：" << endl;
+    cout << "景点数目：" << graph.getVexNum() << endl;
+    cout << "路径数目：" << graph.getEdgeNum() << endl << endl;
+    cout << "景点列表：" << endl;
     for (int i = 0; i < graph.getVexNum(); i++) {
         const auto& vex = graph.getVex(i);
         cout << "  [" << vex.num << "] " << vex.name << " - " << vex.desc << endl;
@@ -143,7 +143,7 @@ int Tourism::showGraph() {
     }
     cout << "============================" << endl;
     return 0;
-} // showGraph 展示图的顶点和边信息
+} // showGraph 展示图的景点和路径信息
 
 int Tourism::TravelPath() {
     int start = readInt("请输入起始景点编号：");
