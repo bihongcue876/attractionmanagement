@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <limits>
 #include "tourism.hpp"
 #include "graph.hpp"
 
@@ -112,19 +113,31 @@ int Tourism::getSpotInfo(){
     int spotNum;
     cout << "请输入景点编号：";
     cin >> spotNum;
-    
+
+    // 检查输入是否有效
+    if (cin.fail()) {
+        cin.clear(); // 清除错误状态
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // 忽略错误输入
+        cout << "错误：景点编号无效" << endl;
+        return -1;
+    }
+
     if (spotNum < 0 || spotNum >= graph.getVexNum()) {
         cout << "错误：景点编号无效" << endl;
         return -1;
     }
-    
+
     Vex vex = graph.getVex(spotNum); // 调用算法层获取顶点信息
+    if (vex.num == -1) {
+        cout << "错误：景点编号无效" << endl;
+        return -1;
+    }
     cout << "========== 景点信息 ==========" << endl;
     cout << "编号：" << vex.num << endl;
     cout << "名称：" << vex.name << endl;
     cout << "描述：" << vex.desc << endl;
     cout << endl;
-    
+
     cout << "相邻景点：" << endl;
     const vector<ArcNode>& adjList = graph.getAdjList(spotNum); // 调用算法层获取邻接表
     if (adjList.empty()) {
@@ -180,20 +193,25 @@ int Tourism::TravelPath(){
     cout << "请输入起始景点编号：";
     cin >> start;
     
-    if (start < 0 || start >= graph.getVexNum()) {
+    // 检查输入是否有效
+    if (cin.fail()) {
+        cin.clear(); // 清除错误状态
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // 忽略错误输入
         cout << "错误：景点编号无效" << endl;
         return -1;
     }
     
-    vector<bool> visited(graph.getVexNum(), false);
-    vector<int> path;
-    
+    if (start < 0 || start >= graph.getVexNum()) {
+        cout << "错误：景点编号无效" << endl;
+        return -1;
+    }
+
     cout << "========== 旅游路径 ==========" << endl;
     cout << "从 " << graph.getVex(start).name << " 开始游览" << endl << endl;
-    
-    // 调用算法层的DFS进行路径搜索
-    pair<vector<int>, int> result = graph.DFS(start, start, visited);
-    
+
+    // 调用算法层的DFS遍历所有顶点
+    pair<vector<int>, int> result = graph.DFSTraverse(start);
+
     if (!result.first.empty()) {
         cout << "推荐路线：" << endl;
         for (int i = 0; i < (int)result.first.size(); i++) {
@@ -217,8 +235,25 @@ int Tourism::findShortPath(){
     int start, end;
     cout << "请输入起点编号：";
     cin >> start;
+    
+    // 检查起点输入是否有效
+    if (cin.fail()) {
+        cin.clear(); // 清除错误状态
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // 忽略错误输入
+        cout << "错误：景点编号无效" << endl;
+        return -1;
+    }
+    
     cout << "请输入终点编号：";
     cin >> end;
+    
+    // 检查终点输入是否有效
+    if (cin.fail()) {
+        cin.clear(); // 清除错误状态
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // 忽略错误输入
+        cout << "错误：景点编号无效" << endl;
+        return -1;
+    }
     
     if (start < 0 || start >= graph.getVexNum() || 
         end < 0 || end >= graph.getVexNum()) {

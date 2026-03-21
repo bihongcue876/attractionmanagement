@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <limits>
 #include "tourism.hpp"
 
 using namespace std;
@@ -9,11 +10,11 @@ void showMenu() {
     cout << "====================================" << endl;
     cout << "      景区信息管理系统" << endl;
     cout << "====================================" << endl;
-    cout << "  1. 创建图" << endl;
+    cout << "  1. 创建景区地图" << endl;
     cout << "  2. 查询景点信息" << endl;
-    cout << "  3. 展示图" << endl;
-    cout << "  4. 旅游路径导航" << endl;
-    cout << "  5. 搜索最短路径" << endl;
+    cout << "  3. 展示景区地图" << endl;
+    cout << "  4. 旅游导航推荐" << endl;
+    cout << "  5. 搜索最近路线" << endl;
     cout << "  6. 铺设电路规划" << endl;
     cout << "  0. 退出系统" << endl;
     cout << "====================================" << endl;
@@ -30,6 +31,18 @@ int main(void) {
     while (true) {
         showMenu(); // 显示菜单
         cin >> choice; // 读取用户输入
+        
+        // 检查输入是否有效
+        if (cin.fail()) {
+            cin.clear(); // 清除错误状态
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // 忽略错误输入
+            cout << endl;
+            cout << "========== 错误提示 ==========" << endl;
+            cout << "错误：无效的选择，请重新输入（0-6）" << endl;
+            cout << endl;
+            system("pause"); // 暂停，等待用户按键
+            continue;
+        }
         
         cout << endl;
         

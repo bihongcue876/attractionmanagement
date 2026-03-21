@@ -1,5 +1,5 @@
-#ifndef TOURISM_H
-#define TOURISM_H
+#ifndef TOURISM_HPP
+#define TOURISM_HPP
 
 #include "graph.hpp"
 

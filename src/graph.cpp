@@ -148,22 +148,22 @@ pair<vector<int>, int> Graph::DFS(int start, int end, vector<bool>& visited){
         vector<int> emptyPath; // 空路径
         return make_pair(emptyPath, -1); // 返回空结果
     }
-    
+
     vector<int> path; // 存储路径
     int totalWeight = 0; // 总权重
-    
+
     visited[start] = true; // 标记起点已访问
     path.push_back(start); // 将起点加入路径
-    
+
     if (start == end) { // 如果起点就是终点
         return make_pair(path, totalWeight); // 返回路径和权重
     }
-    
+
     // 遍历起点的所有邻接顶点
     for (int i = 0; i < (int)adjList[start].size(); i++) {
         int v = adjList[start][i].adjvex; // 邻接顶点编号
         int weight = adjList[start][i].weight; // 边的权重
-        
+
         if (!visited[v]) { // 如果邻接顶点未访问
             pair<vector<int>, int> result = DFS(v, end, visited); // 递归搜索
             if (!result.first.empty()) { // 如果找到路径
@@ -173,31 +173,55 @@ pair<vector<int>, int> Graph::DFS(int start, int end, vector<bool>& visited){
             }
         }
     }
-    
+
     visited[start] = false; // 回溯，取消访问标记
     path.pop_back(); // 移除起点
     vector<int> emptyPath; // 空路径
     return make_pair(emptyPath, -1); // 未找到路径
 } // DFS函数结束
 
-// 深度优先遍历，验证连通性
-void Graph::DFSTraverse(int v0){
+// 深度优先遍历所有顶点，返回遍历路径和总权重
+pair<vector<int>, int> Graph::DFSTraverse(int start){
     int n = vexs.size(); // 获取顶点数量
-    if (v0 < 0 || v0 >= n) { // 检查起始顶点是否有效
-        return; // 无效顶点，直接返回
+    if (start < 0 || start >= n) { // 检查起始顶点是否有效
+        return make_pair(vector<int>(), -1); // 返回空结果
     }
-    
+
     vector<bool> visited(n, false); // 访问标记数组，初始化为未访问
     vector<int> path; // 存储遍历路径
-    
-    // 从v0开始深度优先遍历
-    for (int i = v0; i < n; i++) {
-        if (!visited[i]) { // 如果顶点i未访问
-            // 调用DFS进行搜索
-            pair<vector<int>, int> result = DFS(i, i, visited);
-            if (!result.first.empty()) { // 如果找到路径
-                // 可以在这里处理遍历结果
-            }
+    int totalWeight = 0; // 总权重
+
+    // 从start开始深度优先遍历
+    DFSAll(start, visited, path, totalWeight);
+
+    // 检查是否遍历了所有顶点，如果没有（因为图不连通），从下一个未访问顶点继续
+    for (int i = 0; i < n; i++) {
+        if (!visited[i]) {
+            DFSAll(i, visited, path, totalWeight);
+        }
+    }
+
+    return make_pair(path, totalWeight); // 返回遍历路径和总权重
+}
+
+// 深度优先搜索所有顶点
+void Graph::DFSAll(int start, vector<bool>& visited, vector<int>& path, int& totalWeight) {
+    int n = vexs.size();
+    if (start < 0 || start >= n || visited[start]) {
+        return;
+    }
+
+    visited[start] = true; // 标记已访问
+    path.push_back(start); // 加入路径
+
+    // 遍历所有邻接顶点
+    for (int i = 0; i < (int)adjList[start].size(); i++) {
+        int v = adjList[start][i].adjvex;
+        int weight = adjList[start][i].weight;
+
+        if (!visited[v]) {
+            totalWeight += weight; // 累加权重
+            DFSAll(v, visited, path, totalWeight);
         }
     }
 }

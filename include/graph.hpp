@@ -50,7 +50,9 @@ public:
     int getWeight(int v1, int v2) const;// 获取两顶点间的权重
     // 算法
     std::pair<std::vector<int>, int> DFS(int start, int end, std::vector<bool>& visited); // DFS算法，返回路径和权重
-    void DFSTraverse(int v0); // DFS算法综合，验证连通性
+    std::pair<std::vector<int>, int> DFSTraverse(int start); // DFS遍历所有顶点，返回路径和总权重
+    void DFSAll(int start, std::vector<bool>& visited, std::vector<int>& path, int& totalWeight); // DFS辅助函数
+    void DFSTraverseAll(int v0); // DFS算法综合，验证连通性
     std::pair<std::vector<Edge>, int> Prim(); // Prim最小生成树算法，返回边数组和总权重
     std::pair<std::vector<int>, std::vector<std::vector<int>>> dijkstra(int start); // Dijkstra算法，返回距离和路径
     
