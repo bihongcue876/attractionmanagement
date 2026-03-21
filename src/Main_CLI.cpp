@@ -40,7 +40,6 @@ int main(void) {
             cout << "========== 错误提示 ==========" << endl;
             cout << "错误：无效的选择，请重新输入（0-6）" << endl;
             cout << endl;
-            system("pause"); // 暂停，等待用户按键
             continue;
         }
         
@@ -119,8 +118,7 @@ int main(void) {
         }
         
         cout << endl;
-        system("pause"); // 暂停，等待用户按键
     }
-    
+
     return 0;
 }

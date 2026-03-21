@@ -1,21 +1,19 @@
 #ifndef TOURISM_HPP
 #define TOURISM_HPP
-
 #include "graph.hpp"
 
-
-class Tourism{
+class Tourism {
 private:
-    Graph graph; // 类对象
+    Graph graph; // 图对象
 public:
-    Tourism(); //构造函数
-    ~Tourism(); //析构函数
-    int createGraph(const std::string &vexPath, const std::string &edgePath); //建图
-    int designMinPath(); //规划最短路径（最小生成树）
-    int findShortPath(); //寻找单源最短路径
-    int getSpotInfo(); //获取单点信息
-    int showGraph(); //展示图
-    int TravelPath(); //旅游路径（深搜）
-}; // 旅游类
+    Tourism(); // 构造函数
+    ~Tourism(); // 析构函数
+    int createGraph(const std::string& vexPath, const std::string& edgePath); // 创建图
+    int getSpotInfo(); // 获取景点信息
+    int showGraph(); // 显示图
+    int TravelPath(); // 旅游路径
+    int findShortPath(); // 查找最短路径
+    int designMinPath(); // 设计最小路径
+};
 
 #endif
