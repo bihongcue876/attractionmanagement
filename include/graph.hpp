@@ -4,7 +4,7 @@
 #include <vector>
 
 using namespace std;
-constexpr int INF = 999999; 
+constexpr int INF = 999999;
 
 struct Vex {
     int num; // 景点编号
@@ -29,8 +29,8 @@ private:
     vector<Vex> vexs; // 顶点数组
     vector<vector<ArcNode>> adjList; // 邻接表
     int edgeNum; // 边的数量
-    vector<vector<int>> allPaths; // 存储所有DFS路径
-    void DFSAll(int v, vector<bool>& visited, vector<int>& path); // DFS递归找所有路径
+    vector<vector<int>> allPaths; // 存储所有 DFS 路径
+    void DFS(int v, vector<bool>& visited, vector<int>& path); // DFS 递归找所有路径
 public:
     Graph(); // 构造函数
     ~Graph(); // 析构函数
@@ -41,11 +41,11 @@ public:
     void addEdge(int v1, int v2, int weight); // 添加边
     int getWeight(int v1, int v2) const; // 获取边权重
     vector<ArcNode>& getAdjList(int v); // 获取邻接表
-    const vector<ArcNode>& getAdjList(int v) const; // 获取邻接表(常量版本)
+    const vector<ArcNode>& getAdjList(int v) const; // 获取邻接表 (常量版本)
     int calcPathWeight(const vector<int>& path) const; // 计算路径权重
     vector<vector<int>> DFSTraverse(int start); // 深度优先遍历，返回所有路径
-    vector<Edge> Prim(); // Prim最小生成树算法
-    vector<int> dijkstra(int start, int end); // Dijkstra最短路径算法
+    vector<Edge> Prim(); // Prim 最小生成树算法
+    vector<int> dijkstra(int start, int end); // Dijkstra 最短路径算法
 };
 
 #endif
